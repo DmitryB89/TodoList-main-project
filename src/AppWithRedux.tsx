@@ -1,6 +1,6 @@
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import React, {useReducer, useState} from 'react';
+import React, {useCallback, useReducer, useState} from 'react';
 import './App.css';
 import {v1} from 'uuid';
 
@@ -38,37 +38,36 @@ export function AppWithRedux() {
     const dispatch = useDispatch();
 
 
-    // function removeTask(id: string, todolistId: string) {
-    //     dispatch(removeTaskAC(id, todolistId));
-    // }
-    //
-    // function addTask(title: string, todolistId: string) {
-    //     dispatch(addTaskAC(title, todolistId));
-    // }
-    //
-    // function changeStatus(id: string, isDone: boolean, todolistId: string) {
-    //     dispatch(changeTaskStatusAC(id, isDone, todolistId));
-    // }
-    //
-    // function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
-    //     dispatch(changeTaskTitleAC(id, newTitle, todolistId));
-    // }
-    //
-    // function changeFilter(value: FilterValuesType, todolistId: string) {
-    //     dispatch(changeTodolistFilterAC(todolistId, value));
-    // }
-    //
-    // function removeTodolist(id: string) {
-    //     dispatch(removeTodolistAC(id));
-    // }
-    //
-    // function changeTodolistTitle(id: string, title: string) {
-    //     dispatch(changeTodolistTitleAC(id, title));
-    // }
+    const removeTask = useCallback((id: string, todolistId: string) => {
+        dispatch(removeTaskAC(id, todolistId));
+    }, [dispatch])
+    const addTask = useCallback((title: string, todolistId: string) => {
+        dispatch(addTaskAC(title, todolistId));
+    }, [dispatch])
 
-    function addTodolist(title: string) {
+    const changeStatus = useCallback((id: string, isDone: boolean, todolistId: string) => {
+        dispatch(changeTaskStatusAC(id, isDone, todolistId));
+    }, [dispatch])
+
+    const changeTaskTitle = useCallback((id: string, newTitle: string, todolistId: string) => {
+        dispatch(changeTaskTitleAC(id, newTitle, todolistId));
+    }, [dispatch])
+
+    const changeFilter = useCallback((value: FilterValuesType, todolistId: string) => {
+        dispatch(changeTodolistFilterAC(todolistId, value));
+    }, [dispatch])
+
+    const removeTodolist = useCallback((id: string) => {
+        dispatch(removeTodolistAC(id));
+    }, [dispatch])
+
+    const changeTodolistTitle = useCallback((id: string, title: string) => {
+        dispatch(changeTodolistTitleAC(id, title));
+    }, [dispatch])
+
+    const addTodolist = useCallback((title: string) => {
         dispatch(addTodolistAC(title));
-    }
+    }, [dispatch])
 
     return (
         <div className="App">
@@ -90,15 +89,23 @@ export function AppWithRedux() {
                 <Grid container spacing={3}>
                     {
                         todolists.map(tl => {
-                            let allTodolistTasks = tasks[tl.id];
-                            let tasksForTodolist = allTodolistTasks;
 
 
 
                             return <Grid key={tl.id} item>
                                 <Paper style={{padding: "10px"}}>
-                                    <TodolistRedux
-                                       todolist={tl}
+                                    <Todolist
+                                        id={tl.id}
+                                        title={tl.title}
+                                        tasks={tasks[tl.id]}
+                                        removeTask={removeTask}
+                                        changeFilter={changeFilter}
+                                        addTask={addTask}
+                                        changeTaskStatus={changeStatus}
+                                        removeTodolist={removeTodolist}
+                                        changeTodolistTitle={changeTodolistTitle}
+                                        filter={tl.filter}
+                                        changeTaskTitle={changeTaskTitle}
 
                                     />
                                 </Paper>

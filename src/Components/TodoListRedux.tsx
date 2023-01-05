@@ -3,18 +3,18 @@ import {EditableSpan} from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 import {AddItemForm} from "./AddItemForm";
-import React, {ChangeEvent} from "react";
+import React, {ChangeEvent, useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {TaskType} from "./TodoList";
 import {changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from "../state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
 
-export type    TodolistReduxType = {
+export type TodolistReduxType = {
     todolist: TodolistType
 }
 
-export const TodolistRedux: React.FC<TodolistReduxType> = ({todolist}) => {
+export const TodolistRedux: React.FC<TodolistReduxType> = React.memo (({todolist}) => {
     const {id, title, filter} = todolist;
     let tasks = useSelector<AppRootStateType, Array<TaskType>>(state => state.tasks[id])
 
@@ -27,33 +27,33 @@ export const TodolistRedux: React.FC<TodolistReduxType> = ({todolist}) => {
     }
     const dispatch = useDispatch()
 
-    function removeTask(id: string, todolistId: string) {
-        dispatch(removeTaskAC(id, todolistId));
-    }
+    // function removeTask(id: string, todolistId: string) {
+    //     dispatch(removeTaskAC(id, todolistId));
+    // }
 
-    function addTask(title: string) {
+    const addTask = useCallback((title: string) => {
         dispatch(addTaskAC(title, id));
-    }
+    }, [dispatch])
 
-    function changeStatus(id: string, isDone: boolean, todolistId: string) {
-        dispatch(changeTaskStatusAC(id, isDone, id));
-    }
-
-    function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
-        dispatch(changeTaskTitleAC(id, newTitle, todolistId));
-    }
+    // function changeStatus(id: string, isDone: boolean, todolistId: string) {
+    //     dispatch(changeTaskStatusAC(id, isDone, id));
+    // }
+    //
+    // function changeTaskTitle(id: string, newTitle: string, todolistId: string) {
+    //     dispatch(changeTaskTitleAC(id, newTitle, todolistId));
+    // }
 
     // function changeFilter(value: FilterValuesType, todolistId: string) {
     //     dispatch(changeTodolistFilterAC(todolistId, value));
     // }
 
-    function removeTodolist() {
+    const  removeTodolist = useCallback(() => {
         dispatch(removeTodolistAC(id));
-    }
+    }, [dispatch])
 
-    function changeTodolistTitle(title: string) {
+    const  changeTodolistTitle = useCallback((title: string) => {
         dispatch(changeTodolistTitleAC(id, title));
-    }
+    }, [dispatch])
 
     const onAllClickHandler = () => dispatch(changeTodolistFilterAC(id, 'all'))
     const onActiveClickHandler = () => dispatch(changeTodolistFilterAC(id, 'active'))
@@ -111,4 +111,4 @@ export const TodolistRedux: React.FC<TodolistReduxType> = ({todolist}) => {
             </Button>
         </div>
     </div>
-}
+})

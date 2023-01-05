@@ -1,4 +1,4 @@
-import React, {ChangeEvent, KeyboardEvent, useState} from "react";
+import React, {ChangeEvent, KeyboardEvent, memo, useState} from "react";
 import {Button, IconButton, TextField} from "@material-ui/core";
 import {ControlPoint} from "@material-ui/icons";
 
@@ -7,8 +7,8 @@ type AddItemFormPropsType = {
 
 
 }
-export const AddItemForm = (props: AddItemFormPropsType) => {
-
+export const AddItemForm:React.FC<AddItemFormPropsType> = memo ((props) => {
+    console.log('AddItemForm')
     const [newTaskTitle, setNewTaskTitle] = useState('')
     const [error, setError] = useState<string | null>(null)
     const onNewTitleChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
@@ -16,7 +16,7 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
     }
 
     const onKeyPressHandler = (e: KeyboardEvent<HTMLInputElement>) => {
-        setError(null)
+      if (error)  setError(null)
         if (e.ctrlKey && e.charCode === 13) {
             addTask()
             setNewTaskTitle('')
@@ -50,4 +50,4 @@ export const AddItemForm = (props: AddItemFormPropsType) => {
             {/*{error && <div className={'error-message'}>{error}</div>}*/}
         </div>
     )
-}
+})
