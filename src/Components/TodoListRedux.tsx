@@ -1,4 +1,4 @@
-import {FilterValuesType, TasksStateType, TodolistType} from "../AppWithRedux";
+// import { TasksStateType, TodolistType} from "../AppWithRedux";
 import {EditableSpan} from "./EditableSpan";
 import {Button, Checkbox, IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
@@ -7,8 +7,13 @@ import React, {ChangeEvent, useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
 import {TaskType} from "./TodoList";
-import {changeTodolistFilterAC, changeTodolistTitleAC, removeTodolistAC} from "../state/todolists-reducer";
+import {
+    changeTodolistFilterAC,
+    changeTodolistTitleAC,
+    removeTodolistAC,
+} from "../state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
+import {TodolistType} from "../AppWithRedux";
 
 export type TodolistReduxType = {
     todolist: TodolistType

@@ -176,7 +176,7 @@ export const UpdateTask = () => {
             startDate: "",
             status:status,
             title:title,
-            completed:false
+            // completed:false
 
         })
             .then((res) => {

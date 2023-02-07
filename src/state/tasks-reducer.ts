@@ -1,6 +1,6 @@
-import { TasksStateType} from '../App';
+import {TasksStateType} from '../AppWithRedux';
 import {v1} from 'uuid';
-import {AddTodolistActionType, RemoveTodolistActionType} from './todolists-reducer';
+import {AddTodolistActionType, RemoveTodolistActionType, SetTodolistsType} from './todolists-reducer';
 
 export type RemoveTaskActionType = {
     type: 'REMOVE-TASK'
@@ -35,6 +35,7 @@ type ActionsType =
     | ChangeTaskTitleActionType
     | AddTodolistActionType
     | RemoveTodolistActionType
+    | SetTodolistsType
 
 
 const initialState: TasksStateType = {}
@@ -42,6 +43,15 @@ const initialState: TasksStateType = {}
 
 export const tasksReducer = (state = initialState, action: ActionsType): TasksStateType => {
     switch (action.type) {
+
+        case "SET-TODOS": {
+            const stateCopy = {...state}
+            action.todos.forEach((tl) => {
+                stateCopy[tl.id] = []
+            })
+            return stateCopy
+        }
+
         case "REMOVE-TASK": {
             const stateCopy = {...state}
             const tasks = state[action.todolistId]
@@ -63,14 +73,16 @@ export const tasksReducer = (state = initialState, action: ActionsType): TasksSt
 
             return {
                 ...state,
-            [action.todolistId]:state[action.todolistId]
-                .map(t=>t.id ===action.taskId ? {...t,isDone: action.isDone} : t)}
+                [action.todolistId]: state[action.todolistId]
+                    .map(t => t.id === action.taskId ? {...t, isDone: action.isDone} : t)
+            }
         }
         case "CHANGE-TASK-TITLE": {
             return {
                 ...state,
-                [action.todolistId]:state[action.todolistId]
-                    .map(t=>t.id ===action.taskId ? {...t,title: action.title} : t)}
+                [action.todolistId]: state[action.todolistId]
+                    .map(t => t.id === action.taskId ? {...t, title: action.title} : t)
+            }
         }
         case "ADD-TODOLIST": {
             const stateCopy = {...state}

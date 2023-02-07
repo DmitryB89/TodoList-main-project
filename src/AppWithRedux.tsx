@@ -1,41 +1,36 @@
 import {AppBar, Button, Container, Grid, IconButton, Paper, Toolbar, Typography} from "@material-ui/core";
 import {Menu} from "@material-ui/icons";
-import React, {useCallback, useReducer, useState} from 'react';
+import React, {useCallback, useEffect} from 'react';
 import './App.css';
-import {v1} from 'uuid';
 
 import {
     addTodolistAC,
     changeTodolistFilterAC,
-    changeTodolistTitleAC,
-    removeTodolistAC,
-    todolistsReducer
+    changeTodolistTitleAC, fetchTodolistsTC, FilterValuesType,
+    removeTodolistAC, setTodolistsAC, TodolistDomainType
 } from './state/todolists-reducer';
-import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC, tasksReducer} from './state/tasks-reducer';
+import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from './state/tasks-reducer';
 import {AddItemForm} from "./Components/AddItemForm";
 import {TaskType, Todolist} from "./Components/TodoList";
 import {useDispatch, useSelector} from "react-redux";
-import {AppRootStateType} from "./state/store";
-import {TodolistRedux} from "./Components/TodoListRedux";
-
-
-export type FilterValuesType = "all" | "active" | "completed"
-export type TodolistType = {
-    id: string
-    title: string
-    filter: FilterValuesType
-}
+import {AppDispatch, AppRootStateType} from "./state/store";
+import {todolistsAPI} from "./api/todolist-api";
 
 export type TasksStateType = {
     [key: string]: Array<TaskType>
 }
 
-
 export function AppWithRedux() {
 
-    const todolists = useSelector<AppRootStateType, Array<TodolistType>>(state => state.todolists)
+    useEffect(() => {
+        fetchTodolistsTC()
+    }, [])
+
+    const todolists = useSelector<AppRootStateType, Array<TodolistDomainType>>(state => state.todolists)
     const tasks = useSelector<AppRootStateType, TasksStateType>(state => state.tasks)
-    const dispatch = useDispatch();
+    const dispatch = AppDispatch();
+    console.log(todolists)
+    console.log(tasks)
 
 
     const removeTask = useCallback((id: string, todolistId: string) => {
@@ -89,7 +84,6 @@ export function AppWithRedux() {
                 <Grid container spacing={3}>
                     {
                         todolists.map(tl => {
-
 
 
                             return <Grid key={tl.id} item>

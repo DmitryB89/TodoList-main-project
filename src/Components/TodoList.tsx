@@ -4,9 +4,9 @@ import {Delete} from "@material-ui/icons";
 import React, {memo, useCallback} from 'react';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
-import {FilterValuesType} from "../AppWithReducer";
 import {TaskWithRedux} from "./TaskWithRedux";
 import {ButtonMemo} from "./ButtonMemo";
+import {FilterValuesType} from "../state/todolists-reducer";
 
 
 export type TaskType = {
