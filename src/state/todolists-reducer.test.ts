@@ -2,15 +2,15 @@ import {
     addTodolistAC,
     changeTodolistFilterAC,
     changeTodolistTitleAC, FilterValuesType,
-    removeTodolistAC, TodolistDomainType,
+    removeTodolistAC,
     todolistsReducer,
 } from './todolists-reducer';
 import {v1} from 'uuid';
-import {TodolistType} from "../AppWithRedux";
+import {TodolistType} from "../api/todolist-api";
 
 let todolistId1: string;
 let todolistId2: string;
-let startState: Array<TodolistDomainType> = [];
+let startState: Array<TodolistType> = [];
 
 beforeEach(() => {
     todolistId1 = v1();

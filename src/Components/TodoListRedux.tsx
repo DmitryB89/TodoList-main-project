@@ -6,17 +6,17 @@ import {AddItemForm} from "./AddItemForm";
 import React, {ChangeEvent, useCallback} from "react";
 import {useDispatch, useSelector} from "react-redux";
 import {AppRootStateType} from "../state/store";
-import {TaskType} from "./TodoList";
 import {
     changeTodolistFilterAC,
     changeTodolistTitleAC,
     removeTodolistAC,
+    TodolistDomainType,
 } from "../state/todolists-reducer";
 import {addTaskAC, changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
-import {TodolistType} from "../AppWithRedux";
+import {TaskStatuses, TaskType} from "../api/todolist-api";
 
 export type TodolistReduxType = {
-    todolist: TodolistType
+    todolist: TodolistDomainType
 }
 
 export const TodolistRedux: React.FC<TodolistReduxType> = React.memo (({todolist}) => {
@@ -25,10 +25,10 @@ export const TodolistRedux: React.FC<TodolistReduxType> = React.memo (({todolist
 
 
     if (filter === "active") {
-        tasks = tasks.filter(t => t.isDone === false);
+        tasks = tasks.filter(t => t.status === TaskStatuses.New);
     }
     if (filter === "completed") {
-        tasks = tasks.filter(t => t.isDone === true);
+        tasks = tasks.filter(t => t.status === TaskStatuses.Completed);
     }
     const dispatch = useDispatch()
 

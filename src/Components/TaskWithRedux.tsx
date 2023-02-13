@@ -1,43 +1,42 @@
 import React, {ChangeEvent, memo} from 'react';
-import {TaskType} from "./TodoList";
 import {Checkbox, IconButton} from "@material-ui/core";
 import {EditableSpan} from "./EditableSpan";
 import {Delete} from "@material-ui/icons";
-import {useDispatch} from "react-redux";
-import {changeTaskStatusAC, changeTaskTitleAC, removeTaskAC} from "../state/tasks-reducer";
+import {changeTaskStatusAC, changeTaskTitleAC, removeTaskTC, updateTaskTC} from "../state/tasks-reducer";
+import {TaskStatuses, TaskType} from "../api/todolist-api";
+import {AppDispatch} from "../state/store";
 
 type TaskPropsType = {
-    task:TaskType
+    task: TaskType
     todolistId: string
 
 }
 
-export const TaskWithRedux:React.FC<TaskPropsType> = memo(({task, todolistId}) => {
+export const TaskWithRedux: React.FC<TaskPropsType> = memo(({task, todolistId}) => {
     console.log('Task')
-    const {id, title, isDone} = task
-    const dispatch = useDispatch()
+    const {id, title, status} = task
+    const dispatch = AppDispatch()
 
-    const onClickHandler = () => dispatch(removeTaskAC(id, todolistId))
+    const onClickHandler = () => dispatch(removeTaskTC(todolistId, id))
     const onChangeHandler = (e: ChangeEvent<HTMLInputElement>) => {
-        let newIsDoneValue = e.currentTarget.checked;
-        dispatch(changeTaskStatusAC(id, newIsDoneValue, todolistId));
+        let newStatusValue = e.currentTarget.checked;
+        dispatch(updateTaskTC(todolistId, id, newStatusValue ? TaskStatuses.Completed : TaskStatuses.New));
     }
     const onTitleChangeHandler = (newValue: string) => {
         dispatch(changeTaskTitleAC(id, newValue, todolistId));
     }
 
 
-
-    return <div className={isDone ? "is-done" : ""}>
+    return <div className={status === TaskStatuses.Completed ? "is-done" : ""}>
         <Checkbox
-            checked={isDone}
+            checked={status === TaskStatuses.Completed}
             color="primary"
             onChange={onChangeHandler}
         />
 
-        <EditableSpan value={title} onChange={onTitleChangeHandler} />
+        <EditableSpan value={title} onChange={onTitleChangeHandler}/>
         <IconButton onClick={onClickHandler}>
-            <Delete />
+            <Delete/>
         </IconButton>
     </div>
 });

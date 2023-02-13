@@ -1,19 +1,23 @@
 import {IconButton} from "@material-ui/core";
 import {Delete} from "@material-ui/icons";
 
-import React, {memo, useCallback} from 'react';
+import React, {memo, useCallback, useEffect} from 'react';
 import {AddItemForm} from './AddItemForm';
 import {EditableSpan} from './EditableSpan';
 import {TaskWithRedux} from "./TaskWithRedux";
 import {ButtonMemo} from "./ButtonMemo";
 import {FilterValuesType} from "../state/todolists-reducer";
+import {TaskStatuses, TaskType} from "../api/todolist-api";
+import {AppDispatch} from "../state/store";
+import {getTasksTC, removeTaskTC} from "../state/tasks-reducer";
+import {Task} from "./Task";
 
 
-export type TaskType = {
-    id: string
-    title: string
-    isDone: boolean
-}
+// export type TaskType = {
+//     id: string
+//     title: string
+//     isDone: boolean
+// }
 
 type PropsType = {
     id: string
@@ -22,7 +26,7 @@ type PropsType = {
     removeTask: (taskId: string, todolistId: string) => void
     changeFilter: (value: FilterValuesType, todolistId: string) => void
     addTask: (title: string, todolistId: string) => void
-    changeTaskStatus: (id: string, isDone: boolean, todolistId: string) => void
+    changeTaskStatus: (id: string, status: TaskStatuses, todolistId: string) => void
     removeTodolist: (id: string) => void
     changeTodolistTitle: (id: string, newTitle: string) => void
     filter: FilterValuesType
@@ -30,6 +34,12 @@ type PropsType = {
 }
 
 export const Todolist: React.FC<PropsType> = memo((props) => {
+const dispatch = AppDispatch()
+
+    useEffect(() => {
+dispatch(getTasksTC(props.id))
+    },[])
+
     const addTask = useCallback((title: string) => {
         props.addTask(title, props.id);
     }, [props.addTask, props.id])
@@ -47,10 +57,10 @@ export const Todolist: React.FC<PropsType> = memo((props) => {
 
     let tasks = props.tasks;
     if (props.filter === 'active') {
-        tasks = tasks.filter(t => t.isDone === false)
+        tasks = tasks.filter(t => t.status === TaskStatuses.New)
     }
     if (props.filter === 'completed') {
-        tasks = tasks.filter(t => t.isDone === true)
+        tasks = tasks.filter(t => t.status === TaskStatuses.Completed)
     }
 
     // const removeTask = useCallback( (taskId:string) => props.removeTask(taskId,props.id),[props.removeTask,props.id ])
